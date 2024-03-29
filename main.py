@@ -7,3 +7,8 @@ response = requests.get('https://playground.learnqa.ru/api/Hello?name={name}', p
 response = requests.get(url)
 print(response.text)
 
+
+
+url = 'https://playground.learnqa.ru/api/get_text'
+response = requests.get(url)
+print(response.text)
