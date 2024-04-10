@@ -1,9 +1,11 @@
 import json.decoder
-
+import requests
 from requests import Response
 
 
 class BaseCase:
+    base_url = "https://playground.learnqa.ru/api/user/"
+
     def get_cookie(self, response: Response, cookie_name):
         assert cookie_name in response.cookies, f"Cannot find cookie with name {cookie_name} in the last response"
         return response.cookies[cookie_name]
@@ -20,3 +22,24 @@ class BaseCase:
 
         assert name in response_as_dict, f'Response JSON doesn\'t have key \'{name}\''
         return response_as_dict[name]
+
+
+    def create_user(self, username, firstName, lastName, email, password):
+        response = requests.post(f"{self.base_url}", data={
+            "username": username,
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "password": password
+            }
+                                 )
+
+        assert response.status_code == 200, f"Failed to create user. Status code: {response.status_code}"
+        response_dict = response.json()
+        user_id = response_dict['id']
+        response_login = requests.post(f"{self.base_url}login", data={"email": email, "password": password})
+        assert response_login.status_code == 200, f"Failed to login user. Status code: {response_login.status_code}"
+        auth_sid = response.cookies.get("auth_sid")
+        token = response.headers.get("x-csrf-token")
+
+        return user_id, auth_sid, token
