@@ -3,9 +3,15 @@ import pytest
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from datetime import datetime
+import allure
 
 
 class TestUserDelete(BaseCase):
+
+    @allure.epic("User Management")
+    @allure.feature("User Deletion")
+    @allure.story("Deleting Users")
+    @allure.title("Test to delete a user with wrong ID")
     def test_delete_user_wrong_id(self):
         data = {
             'email': 'vinkotov@example.com',
@@ -32,6 +38,10 @@ class TestUserDelete(BaseCase):
         }
         self.user_id, self.auth_sid, self.token = self.create_user(**self.register_data)
 
+    @allure.epic("User Management")
+    @allure.feature("User Deletion")
+    @allure.story("Deleting Users")
+    @allure.title("Test to delete a user with correct ID")
     def test_delete_user_positive(self):
         response = requests.delete(f"https://playground.learnqa.ru/api/user/{self.user_id}",
                                    headers={"Cookie": self.auth_sid})
@@ -39,6 +49,10 @@ class TestUserDelete(BaseCase):
         response_get = requests.get(f"https://playground.learnqa.ru/api/user/{self.user_id}")
         Assertions.assert_code_status(response_get, 400)
 
+    @allure.epic("User Management")
+    @allure.feature("User Deletion")
+    @allure.story("Deleting Users")
+    @allure.title("Test to delete a user with wrong authentication")
     def test_delete_user_wrong_auth(self):
         register_data = {
             "username": "testuser",

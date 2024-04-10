@@ -2,7 +2,7 @@ import pytest
 import requests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
-
+import allure
 
 class TestUserAuth(BaseCase):
     exclude_params = [
@@ -21,6 +21,10 @@ class TestUserAuth(BaseCase):
         self.token = self.get_header(response1, "x-csrf-token")
         self.user_id_from_auth_method = self.get_json_value(response1, "user_id")
 
+    @allure.epic("User Management")
+    @allure.feature("User Authentication")
+    @allure.story("User Authentication Process")
+    @allure.title("Test to authenticate user with correct credentials")
     def test_auth_user(self):
         response2 = requests.get(
             "https://playground.learnqa.ru/api/user/auth",

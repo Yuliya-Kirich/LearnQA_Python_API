@@ -3,6 +3,8 @@ import requests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 from datetime import datetime
+import allure
+
 
 class TestUserRegister(BaseCase):
     base_url = "https://playground.learnqa.ru/api/user/"
@@ -13,6 +15,10 @@ class TestUserRegister(BaseCase):
         random_part = datetime.now().strftime("%m%d%Y%H%M%S")
         self.email = f"{base_part}{random_part}@{domain}"
 
+    @allure.epic("User Management")
+    @allure.feature("User Registration")
+    @allure.story("User Registration Process")
+    @allure.title("Test to register a new user")
     def test_create_user_successfully(self):
         data = {
             "username": "user1",
@@ -25,6 +31,10 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 200)
         Assertions.assert_json_has_key(response, "id")
 
+    @allure.epic("User Management")
+    @allure.feature("User Registration")
+    @allure.story("User Registration Process")
+    @allure.title("Test to register a user with an existing email")
     def test_create_user_with_incorrect_email(self):
         email = 'incorrectemail.com'
         data = {
