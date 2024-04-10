@@ -43,3 +43,13 @@ class BaseCase:
         token = response.headers.get("x-csrf-token")
 
         return user_id, auth_sid, token
+
+    def get_auth_headers(self, data=None):
+        if data is None:
+            data = {}
+        response = requests.post("https://playground.learnqa.ru/api/user/login", data=data)
+        assert response.status_code == 200, f"Unexpected status code {response.status_code} when logging in"
+        auth_sid = self.get_cookie(response, "auth_sid")
+        token = self.get_header(response, "x-csrf-token")
+        headers = {"x-csrf-token": token, "Cookie": auth_sid}
+        return headers
